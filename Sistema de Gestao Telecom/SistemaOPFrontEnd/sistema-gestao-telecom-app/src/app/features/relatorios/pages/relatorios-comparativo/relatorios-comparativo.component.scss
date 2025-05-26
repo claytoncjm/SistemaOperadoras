@@ -1,0 +1,112 @@
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  button {
+    margin-top: 4px;
+  }
+}
+
+.filtro-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.tabela-container {
+  position: relative;
+  min-height: 200px;
+  overflow: auto;
+
+  table {
+    width: 100%;
+  }
+
+  .mat-column-operadora {
+    min-width: 150px;
+  }
+
+  .mat-column-quantidadeContratos,
+  .mat-column-quantidadeFaturas {
+    min-width: 100px;
+  }
+
+  .mat-column-valorTotalContratos,
+  .mat-column-valorTotalFaturas,
+  .mat-column-mediaValorContrato,
+  .mat-column-mediaValorFatura {
+    min-width: 120px;
+  }
+
+  .mat-column-percentualVariacao {
+    min-width: 100px;
+  }
+
+  .mat-column-acoes {
+    width: 48px;
+    text-align: center;
+  }
+
+  .variacao-positiva {
+    color: green;
+    font-weight: 500;
+  }
+
+  .variacao-negativa {
+    color: red;
+    font-weight: 500;
+  }
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-data-message {
+  padding: 16px;
+  text-align: center;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+mat-card-actions {
+  padding: 16px;
+  gap: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .tabela-container {
+    overflow-x: auto;
+  }
+}

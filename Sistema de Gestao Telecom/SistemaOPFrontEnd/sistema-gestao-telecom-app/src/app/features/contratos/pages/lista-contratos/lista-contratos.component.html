@@ -1,0 +1,100 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Contratos</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="actions-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Filtrar</mat-label>
+          <input matInput (keyup)="aplicarFiltro($event)" placeholder="Ex. Matriz" #input>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="novoContrato()">
+          <mat-icon>add</mat-icon>
+          Novo Contrato
+        </button>
+      </div>
+
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+
+          <!-- Nome Filial Column -->
+          <ng-container matColumnDef="nomeFilial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Filial </th>
+            <td mat-cell *matCellDef="let row"> {{row.nomeFilial}} </td>
+          </ng-container>
+
+          <!-- Nome Operadora Column -->
+          <ng-container matColumnDef="nomeOperadora">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Operadora </th>
+            <td mat-cell *matCellDef="let row"> {{row.nomeOperadora}} </td>
+          </ng-container>
+
+          <!-- Plano Contratado Column -->
+          <ng-container matColumnDef="planoContratado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Plano </th>
+            <td mat-cell *matCellDef="let row"> {{row.planoContratado}} </td>
+          </ng-container>
+
+          <!-- Data Início Column -->
+          <ng-container matColumnDef="dataInicio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Início </th>
+            <td mat-cell *matCellDef="let row"> {{row.dataInicio | date:'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <!-- Data Vencimento Column -->
+          <ng-container matColumnDef="dataVencimento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vencimento </th>
+            <td mat-cell *matCellDef="let row"> {{row.dataVencimento | date:'dd/MM/yyyy'}} </td>
+          </ng-container>
+
+          <!-- Valor Mensal Column -->
+          <ng-container matColumnDef="valorMensal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Mensal </th>
+            <td mat-cell *matCellDef="let row"> {{row.valorMensal | currency:'BRL'}} </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let row">
+              <span [class]="'status-badge ' + row.status.toLowerCase()">
+                {{row.status}}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Ações Column -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef> Ações </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="primary" (click)="editarContrato(row.id)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="excluirContrato(row.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9">Nenhum dado corresponde ao filtro "{{input.value}}"</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecione a página"></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

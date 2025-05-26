@@ -1,0 +1,106 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ isEdicao ? 'Editar' : 'Novo' }} Contrato</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome da Filial</mat-label>
+            <input matInput formControlName="nomeFilial" placeholder="Ex. Matriz SP">
+            <mat-error *ngIf="form.get('nomeFilial')?.errors?.['required']">
+              Nome da filial é obrigatório
+            </mat-error>
+            <mat-error *ngIf="form.get('nomeFilial')?.errors?.['minlength']">
+              Nome da filial deve ter no mínimo 3 caracteres
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Operadora</mat-label>
+            <input type="text" matInput formControlName="operadoraId" [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayOperadora">
+              <mat-option *ngFor="let operadora of filteredOperadoras | async" [value]="operadora.id">
+                {{operadora.nome}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="form.get('operadoraId')?.errors?.['required']">
+              Operadora é obrigatória
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Plano Contratado</mat-label>
+            <input matInput formControlName="planoContratado" placeholder="Ex. Internet 500MB">
+            <mat-error *ngIf="form.get('planoContratado')?.errors?.['required']">
+              Plano contratado é obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row date-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Data de Início</mat-label>
+            <input matInput [matDatepicker]="pickerInicio" formControlName="dataInicio">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicio></mat-datepicker>
+            <mat-error *ngIf="form.get('dataInicio')?.errors?.['required']">
+              Data de início é obrigatória
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Data de Vencimento</mat-label>
+            <input matInput [matDatepicker]="pickerVencimento" formControlName="dataVencimento">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerVencimento"></mat-datepicker-toggle>
+            <mat-datepicker #pickerVencimento></mat-datepicker>
+            <mat-error *ngIf="form.get('dataVencimento')?.errors?.['required']">
+              Data de vencimento é obrigatória
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Valor Mensal</mat-label>
+            <input matInput type="number" formControlName="valorMensal" placeholder="0.00">
+            <span matPrefix>R$&nbsp;</span>
+            <mat-error *ngIf="form.get('valorMensal')?.errors?.['required']">
+              Valor mensal é obrigatório
+            </mat-error>
+            <mat-error *ngIf="form.get('valorMensal')?.errors?.['min']">
+              Valor mensal deve ser maior que zero
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of statusOptions" [value]="status">
+                {{status}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('status')?.errors?.['required']">
+              Status é obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="actions-row">
+          <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ isEdicao ? 'Atualizar' : 'Criar' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

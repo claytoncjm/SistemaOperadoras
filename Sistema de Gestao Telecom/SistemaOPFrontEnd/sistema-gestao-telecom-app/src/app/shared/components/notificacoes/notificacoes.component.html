@@ -1,0 +1,54 @@
+<div class="notificacoes-container">
+  <mat-toolbar class="notificacoes-toolbar">
+    <span>Notificações</span>
+    <span class="spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Opções de notificações">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="marcarTodasComoLidas()">
+        <mat-icon>done_all</mat-icon>
+        <span>Marcar todas como lidas</span>
+      </button>
+      <button mat-menu-item (click)="limparTodasNotificacoes()">
+        <mat-icon>clear_all</mat-icon>
+        <span>Limpar todas</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <div class="notificacoes-content">
+    <ng-container *ngIf="notificacoes$ | async as notificacoes">
+      <mat-list *ngIf="notificacoes.length > 0; else semNotificacoes">
+        <mat-list-item *ngFor="let notificacao of notificacoes" 
+                       [class.nao-lida]="!notificacao.lida"
+                       (click)="navegarParaDetalhes(notificacao)">
+          <mat-icon matListItemIcon [color]="getCorPorTipo(notificacao.tipo)">
+            {{ getIconePorTipo(notificacao.tipo) }}
+          </mat-icon>
+          <div matListItemTitle>{{ notificacao.titulo }}</div>
+          <div matListItemLine>{{ notificacao.mensagem }}</div>
+          <div matListItemMeta>
+            {{ notificacao.dataNotificacao | date:'dd/MM/yyyy HH:mm' }}
+          </div>
+          <button mat-icon-button (click)="marcarComoLida(notificacao, $event)" 
+                  *ngIf="!notificacao.lida"
+                  matTooltip="Marcar como lida">
+            <mat-icon>done</mat-icon>
+          </button>
+          <button mat-icon-button (click)="excluirNotificacao(notificacao, $event)" 
+                  matTooltip="Excluir notificação">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #semNotificacoes>
+  <div class="sem-notificacoes">
+    <mat-icon>notifications_off</mat-icon>
+    <p>Não há notificações</p>
+  </div>
+</ng-template>

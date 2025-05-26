@@ -1,0 +1,27 @@
+# .NET Core
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+
+# Angular
+dist/
+node_modules/
+.angular/
+*.js.map
+*.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+Thumbs.db

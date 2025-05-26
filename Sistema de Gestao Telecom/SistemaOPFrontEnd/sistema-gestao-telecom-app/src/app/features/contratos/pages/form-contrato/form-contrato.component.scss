@@ -1,0 +1,35 @@
+.container {
+  padding: 20px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+  
+  mat-form-field {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+.date-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.actions-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+mat-card {
+  max-width: 800px;
+  margin: 0 auto;
+}

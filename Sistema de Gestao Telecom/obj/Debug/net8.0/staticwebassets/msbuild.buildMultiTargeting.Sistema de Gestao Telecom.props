@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Sistema de Gestao Telecom.props" />
-</Project>
