@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        builder.SetIsOriginAllowed(origin => true) // Permite qualquer origem em desenvolvimento
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
@@ -45,10 +45,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-// Enable CORS
+// Enable CORS - deve vir antes do UseHttpsRedirection
 app.UseCors();
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

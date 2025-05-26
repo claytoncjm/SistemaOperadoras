@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
 
@@ -37,7 +37,12 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   getDashboardData(): Observable<ApiResponse<DashboardData>> {
-    return this.http.get<ApiResponse<DashboardData>>(this.baseUrl);
+    return this.http.get<ApiResponse<DashboardData>>(this.baseUrl).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erro ao carregar dados do dashboard:', error);
+        return of({ success: false, message: this.getErrorMessage(error), data: this.getEmptyDashboardData() });
+      })
+    );
   }
 
   getEvolucaoMensal(ano: number, mes?: number): Observable<ApiResponse<DashboardData['evolucaoMensal']>> {
@@ -46,6 +51,22 @@ export class DashboardService {
       url += `/${mes}`;
     }
     return this.http.get<ApiResponse<DashboardData['evolucaoMensal']>>(url);
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'Não foi possível conectar ao servidor. Por favor, verifique sua conexão.';
+    }
+    return error.error?.message || error.message || 'Ocorreu um erro ao processar sua requisição.';
+  }
+
+  private getEmptyDashboardData(): DashboardData {
+    return {
+      totais: { operadoras: 0, contratos: 0, faturas: 0, valorTotalFaturas: 0 },
+      faturasStatus: [],
+      evolucaoMensal: [],
+      distribuicaoOperadoras: []
+    };
   }
 
   getDistribuicaoOperadoras(): Observable<ApiResponse<DashboardData['distribuicaoOperadoras']>> {

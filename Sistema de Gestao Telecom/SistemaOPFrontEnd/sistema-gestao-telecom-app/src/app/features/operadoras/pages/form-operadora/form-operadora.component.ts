@@ -77,35 +77,47 @@ export class FormOperadoraComponent implements OnInit {
   }
 
   protected onSubmit(): void {
-    if (!this.form.valid) return;
-
-    const formValue = this.form.getRawValue();
-    const operadoraDto: CreateOperadoraDto = {
-      nome: formValue.nome,
-      tipoServico: formValue.tipoServico,
-      contatoSuporte: formValue.contatoSuporte
-    };
-
-    const request = this.isEdicao && this.operadoraId
-      ? this.operadoraService.update(this.operadoraId, operadoraDto)
-      : this.operadoraService.create(operadoraDto);
-
-    request.subscribe({
-      next: () => {
-        const message = this.isEdicao
-          ? 'Operadora atualizada com sucesso!'
-          : 'Operadora criada com sucesso!';
-        this.snackBar.open(message, 'Fechar', { duration: 3000 });
-        void this.router.navigate(['/operadoras']);
-      },
-      error: (error: Error) => {
-        const errorMessage = this.isEdicao
-          ? 'Erro ao atualizar operadora'
-          : 'Erro ao criar operadora';
-        console.error(errorMessage + ':', error);
-        this.snackBar.open(errorMessage, 'Fechar', { duration: 3000 });
+    if (this.form.valid) {
+      const operadora: CreateOperadoraDto = this.form.getRawValue();
+      
+      if (this.isEdicao && this.operadoraId) {
+        this.operadoraService.update(this.operadoraId, operadora).subscribe({
+          next: () => {
+            this.snackBar.open('Operadora atualizada com sucesso!', 'Fechar', { duration: 3000 });
+            this.router.navigate(['..'], { relativeTo: this.route });
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar operadora:', error);
+            this.snackBar.open(
+              error.status === 0
+                ? 'Não foi possível conectar ao servidor. Verifique sua conexão.'
+                : error.error?.message || 'Erro ao atualizar operadora',
+              'Fechar',
+              { duration: 5000 }
+            );
+          }
+        });
+      } else {
+        this.operadoraService.create(operadora).subscribe({
+          next: () => {
+            this.snackBar.open('Operadora criada com sucesso!', 'Fechar', { duration: 3000 });
+            this.router.navigate(['..'], { relativeTo: this.route });
+          },
+          error: (error) => {
+            console.error('Erro ao criar operadora:', error);
+            this.snackBar.open(
+              error.status === 0
+                ? 'Não foi possível conectar ao servidor. Verifique sua conexão.'
+                : error.error?.message || 'Erro ao criar operadora',
+              'Fechar',
+              { duration: 5000 }
+            );
+          }
+        });
       }
-    });
+    } else {
+      this.snackBar.open('Por favor, preencha todos os campos corretamente', 'Fechar', { duration: 5000 });
+    }
   }
 
   protected cancelar(): void {
