@@ -1,0 +1,6 @@
+@Sistema_de_Gestao_Telecom_HostAddress = http://localhost:5260
+
+GET {{Sistema_de_Gestao_Telecom_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
