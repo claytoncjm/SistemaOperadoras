@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, timer, of } from 'rxjs';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Notificacao } from '../models/notificacao.model';
 import { ApiResponse } from '../models/api-response.model';
@@ -30,6 +30,10 @@ export class NotificacaoService {
       tap(notificacoes => {
         this.notificacoesSubject.next(notificacoes);
         this.atualizarContadorNaoLidas(notificacoes);
+      }),
+      catchError(error => {
+        console.log('Erro ao buscar notificações:', this.getErrorMessage(error));
+        return of([]);
       })
     );
   }
@@ -37,6 +41,13 @@ export class NotificacaoService {
   private atualizarContadorNaoLidas(notificacoes: Notificacao[]): void {
     const naoLidas = notificacoes.filter(n => !n.lida).length;
     this.notificacoesNaoLidasSubject.next(naoLidas);
+  }
+
+  private getErrorMessage(error: HttpErrorResponse): string {
+    if (error.status === 0) {
+      return 'Não foi possível conectar ao servidor. Por favor, verifique sua conexão.';
+    }
+    return error.error?.message || error.message || 'Ocorreu um erro ao processar sua requisição.';
   }
 
   marcarComoLida(id: number): Observable<void> {
